@@ -1,4 +1,4 @@
-[Hux Blog](https://huangxuan.me)
+[晚春 Blog](https://zcjdenny.github.io/)
 ================================
 
 > I never expected this to become popular.
