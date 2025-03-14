@@ -1,13 +1,13 @@
 ---
 layout:       post
-title:        "如何作用西格玛播放器"
+title:        "如何使用西格玛播放器"
 author:       "Denny"
 header-style: text
 catalog:      true
 ---
 歌词显示经特殊优化，无需手动调整歌词就可在最佳时间显示歌词，使歌迷准确抓住每一句歌词。采用优化后的音频渲染引擎，还原超品音质，播放绝无卡顿
 
-![](.\img\1.jpg)
+![](./img/1.jpg)
 
 ![](C:\Users\Administrator\Desktop\src\2.jpg)
 
