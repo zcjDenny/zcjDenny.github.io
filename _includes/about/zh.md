@@ -1,8 +1,26 @@
-Hey，我是黄玄（a.k.a. Hux, _@huxpro_），一个略懂计算机科学与艺术的斜杆不动青年，自诩是一个[广院](https://baike.baidu.com/item/%E4%B8%AD%E5%9B%BD%E4%BC%A0%E5%AA%92%E5%A4%A7%E5%AD%A6)数字媒体艺术系与 RIT 计算机科学系（师从 [Prof. Matthew Fluet](https://www.cs.rit.edu/~mtf/) 专攻编程语言）杂交出来的[黑客与画家](https://book.douban.com/subject/6021440/)。
+## 你好，世界！我是晚春，一个用代码编织梦想的探险家
 
-现为 <del>Facebook</del> Meta 签约软件工程师，就职于开源技术<del>网红</del>团队 [React](https://beta.reactjs.org/community/meet-the-team#react-core)，曾参与 [Hermes JavaScript 引擎](https://hermesengine.dev/)，[ReasonML](https://reasonml.github.io/) (现 [ReScript](https://rescript-lang.org/))，以及 [Reality Labs](https://tech.fb.com/ar-vr/) 某保密项目等。在国内期间，曾被招募为阿里巴巴 · [阿里旅行（飞猪）](http://alitrip.com)· 前端工程师、微影时代 · 微票儿 · 前端基础设施工程团队负责人、[饿了么](https://ele.me/) · 大前端团队 · [PWA 顾问](https://medium.com/elemefe/upgrading-ele-me-to-progressive-web-app-2a446832e509) 等。
+我热爱编程，就像热爱呼吸一样自然。键盘的敲击声是我最动听的乐章，屏幕上跳动的代码是我最绚丽的画作。从vb.net到c#再到python，我享受着用代码解决难题、创造价值的每一个瞬间。
 
+我也热衷于将想法转化为现实，独立开发了**西格玛播放器**软件，它就像我的孩子一样，承载着我的热情和汗水。未来，我希望能开发出更多实用、有趣的软件，用科技的力量让世界变得更美好。
 
-目前的物理活动范围主要在美帝纽约与硅谷，也想当个数字游<del>民</del>侠。虚拟分身日常出没于[微博](https://weibo.com/huxpro)、[知乎](https://www.zhihu.com/people/huxpro/pins/posts)、[B站](https://space.bilibili.com/43271611)、[Instagram](https://www.instagram.com/huxpro/)、[推特](https://twitter.com/Huxpro/)、[Github](https://github.com/huxpro) 等。
+当然，生活不只有代码。音乐是我灵魂的慰藉，我喜欢流行并带中国风类型的音乐，旋律总能让我心潮澎湃。我也热爱大自然，喜欢用脚步丈量山川，感受清风拂面的畅快。我喜欢爬山，和在草原上漫步，这样能让我充分的接触大自然，让我充满活力，也让我结识了许多志同道合的朋友。
 
+我相信，人生就是一场不断探索、不断突破的旅程。我渴望学习新知识，挑战新领域，结识新朋友，用积极向上的态度拥抱每一个明天。
+
+很高兴在这里遇见你，期待与你交流编程心得，分享生活乐趣，一起探索这个精彩的世界！
+
+**你可以在这里找到我：**
+
+- 邮箱: ccccvt@163.com
+- QQ: 125781909
+- 微信: Hianglert
+
+**我的博客将分享：**
+
+- 编程技巧和经验
+- 软件开发心得
+- 生活感悟和旅行见闻
+
+**欢迎留言交流，让我们一起成长！**
 
