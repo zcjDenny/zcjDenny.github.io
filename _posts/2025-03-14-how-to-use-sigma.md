@@ -6,7 +6,7 @@ header-style: text
 catalog:      true
 ---
 歌词显示经特殊优化，无需手动调整歌词就可在最佳时间显示歌词，使歌迷准确抓住每一句歌词。采用优化后的音频渲染引擎，还原超品音质，播放绝无卡顿
-[西格玛安装包下载地址](https://deepcast.top/Setup.exe)
+[西格玛安装包下载地址](https://pan.baidu.com/s/13Qz8o7GaWge6ZCAA7tvDZw?pwd=36a8)提取码: 36a8
 
 ![](https://deepcast.top/img/1.jpg)
 
