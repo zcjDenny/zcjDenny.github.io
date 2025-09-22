@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sigma播放器 - 许可证验证API</title>
+    <style>
+      :root {
+        --primary-color: #6e5494;
+        --secondary-color: #4078c0;
+        --accent-color: #ff6b6b;
+        --success-color: #4caf50;
+        --dark-bg: #0d1117;
+        --dark-card: #161b22;
+        --dark-text: #c9d1d9;
+        --light-bg: #f5f8fa;
+        --light-card: #ffffff;
+        --light-text: #24292e;
+        --border-radius: 8px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: var(--light-bg);
+        color: var(--light-text);
+        line-height: 1.6;
+        padding: 20px;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+
+      .container {
+        background-color: var(--light-card);
+        border-radius: var(--border-radius);
+        padding: 30px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      }
+
+      h1 {
+        color: var(--primary-color);
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .api-endpoint {
+        margin: 20px 0;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: var(--border-radius);
+        border-left: 4px solid var(--primary-color);
+      }
+
+      .endpoint-url {
+        font-family: monospace;
+        background-color: #e9ecef;
+        padding: 10px;
+        border-radius: 4px;
+        margin: 10px 0;
+        word-break: break-all;
+      }
+
+      .method {
+        display: inline-block;
+        padding: 4px 8px;
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 4px;
+        font-weight: bold;
+        margin-right: 10px;
+      }
+
+      .params-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+      }
+
+      .params-table th,
+      .params-table td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .params-table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+      }
+
+      .response-example {
+        background-color: #2b2b2b;
+        color: #f8f8f2;
+        padding: 15px;
+        border-radius: 4px;
+        margin: 15px 0;
+        overflow-x: auto;
+        font-family: monospace;
+        font-size: 14px;
+      }
+
+      .code-key {
+        color: #f92672;
+      }
+
+      .code-string {
+        color: #a6e22e;
+      }
+
+      .code-number {
+        color: #ae81ff;
+      }
+
+      .code-boolean {
+        color: #ae81ff;
+      }
+
+      .instructions {
+        margin: 30px 0;
+        padding: 20px;
+        background-color: #e7f3ff;
+        border-radius: var(--border-radius);
+        border-left: 4px solid var(--secondary-color);
+      }
+
+      .instructions h3 {
+        color: var(--secondary-color);
+        margin-bottom: 15px;
+      }
+
+      .instructions ol {
+        margin-left: 20px;
+      }
+
+      .instructions li {
+        margin-bottom: 10px;
+      }
+
+      .test-area {
+        margin: 30px 0;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: var(--border-radius);
+      }
+
+      .test-form {
+        display: grid;
+        gap: 15px;
+        margin-top: 15px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-group label {
+        font-weight: 500;
+        margin-bottom: 5px;
+      }
+
+      .form-group input {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+
+      .btn {
+        padding: 12px 20px;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .btn:hover {
+        background-color: var(--secondary-color);
+      }
+
+      .test-result {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #2b2b2b;
+        color: #f8f8f2;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 14px;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid #ddd;
+        color: #666;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 10px;
+        }
+
+        .container {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Sigma播放器 - 许可证验证API</h1>
+
+      <div class="api-endpoint">
+        <h2><span class="method">GET</span> 验证设备状态</h2>
+        <div class="endpoint-url">
+          https://deepcast.top/api.html?action=verify&device_id=设备ID
+        </div>
+
+        <h3>参数说明</h3>
+        <table class="params-table">
+          <tr>
+            <th>参数</th>
+            <th>类型</th>
+            <th>必填</th>
+            <th>说明</th>
+          </tr>
+          <tr>
+            <td>action</td>
+            <td>string</td>
+            <td>是</td>
+            <td>操作类型，固定为"verify"</td>
+          </tr>
+          <tr>
+            <td>device_id</td>
+            <td>string</td>
+            <td>是</td>
+            <td>设备唯一标识符</td>
+          </tr>
+        </table>
+
+        <h3>响应示例</h3>
+        <div class="response-example">
+          <span class="code-key">{"status":</span>
+          <span class="code-string">"success"</span>,<br />
+          <span class="code-key">"registered":</span>
+          <span class="code-boolean">true</span>,<br />
+          <span class="code-key">"start_date":</span>
+          <span class="code-string">"2025/9/22"</span>,<br />
+          <span class="code-key">"days_remaining":</span>
+          <span class="code-number">5</span>,<br />
+          <span class="code-key">"valid":</span>
+          <span class="code-boolean">true</span><span class="code-key">}</span>
+        </div>
+      </div>
+
+      <div class="api-endpoint">
+        <h2><span class="method">GET</span> 注册新设备</h2>
+        <div class="endpoint-url">
+          https://deepcast.top/api.html?action=register&device_id=设备ID
+        </div>
+
+        <h3>参数说明</h3>
+        <table class="params-table">
+          <tr>
+            <th>参数</th>
+            <th>类型</th>
+            <th>必填</th>
+            <th>说明</th>
+          </tr>
+          <tr>
+            <td>action</td>
+            <td>string</td>
+            <td>是</td>
+            <td>操作类型，固定为"register"</td>
+          </tr>
+          <tr>
+            <td>device_id</td>
+            <td>string</td>
+            <td>是</td>
+            <td>设备唯一标识符</td>
+          </tr>
+        </table>
+
+        <h3>响应示例</h3>
+        <div class="response-example">
+          <span class="code-key">{"status":</span>
+          <span class="code-string">"success"</span>,<br />
+          <span class="code-key">"message":</span>
+          <span class="code-string">"设备注册成功"</span>,<br />
+          <span class="code-key">"start_date":</span>
+          <span class="code-string">"2025/9/22"</span>,<br />
+          <span class="code-key">"days_remaining":</span>
+          <span class="code-number">6</span><span class="code-key">}</span>
+        </div>
+      </div>
+
+      <div class="instructions">
+        <h3>使用说明</h3>
+        <ol>
+          <li>软件启动时会自动调用验证接口检查设备状态</li>
+          <li>如果设备未注册，会自动调用注册接口</li>
+          <li>试用期为6天，过期后需要输入授权码</li>
+          <li>所有验证数据存储在浏览器的localStorage中</li>
+          <li>支持离线验证（基于最后一次成功验证的结果）</li>
+        </ol>
+      </div>
+
+      <div class="test-area">
+        <h2>API测试工具</h2>
+        <div class="test-form">
+          <div class="form-group">
+            <label for="deviceId">设备ID</label>
+            <input
+              type="text"
+              id="deviceId"
+              placeholder="输入设备ID"
+              value="SMG-8XH2-B3C9-D7F6"
+            />
+          </div>
+          <div class="form-group">
+            <label for="action">操作类型</label>
+            <select id="action">
+              <option value="verify">验证设备状态</option>
+              <option value="register">注册新设备</option>
+            </select>
+          </div>
+          <button class="btn" onclick="testAPI()">测试API</button>
+        </div>
+
+        <div class="test-result" id="testResult">
+          {/* 测试结果将在这里显示 */}
+        </div>
+      </div>
+
+      <div class="footer">
+        <p>© 2023 Sigma播放器 - 许可证验证API | 版本 1.0.0</p>
+      </div>
+    </div>
+
+    <script>
+      // 模拟数据库存储在localStorage中
+      const DB_KEY = "sigma_device_registry";
+
+      // 初始化数据库
+      function initDatabase() {
+        if (!localStorage.getItem(DB_KEY)) {
+          localStorage.setItem(DB_KEY, JSON.stringify({}));
+        }
+        return JSON.parse(localStorage.getItem(DB_KEY));
+      }
+
+      // 获取设备信息
+      function getDeviceInfo(deviceId) {
+        const db = initDatabase();
+        return db[deviceId] || null;
+      }
+
+      // 注册新设备
+      function registerDevice(deviceId) {
+        const db = initDatabase();
+        const today = new Date();
+        const startDate = `${today.getFullYear()}/${
+          today.getMonth() + 1
+        }/${today.getDate()}`;
+
+        db[deviceId] = {
+          device_id: deviceId,
+          start_date: startDate,
+          registered: true,
+          last_check: new Date().toISOString(),
+        };
+
+        localStorage.setItem(DB_KEY, JSON.stringify(db));
+        return db[deviceId];
+      }
+
+      // 检查试用期是否过期
+      function checkTrialExpired(startDate) {
+        const start = new Date(startDate);
+        const now = new Date();
+        const diffTime = Math.abs(now - start);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays > 6; // 6天试用期
+      }
+
+      // 处理API请求
+      function handleAPIRequest(params) {
+        const { action, device_id } = params;
+
+        if (!device_id) {
+          return {
+            status: "error",
+            message: "设备ID不能为空",
+          };
+        }
+
+        if (action === "verify") {
+          const deviceInfo = getDeviceInfo(device_id);
+
+          if (!deviceInfo) {
+            return {
+              status: "success",
+              registered: false,
+              message: "设备未注册",
+            };
+          }
+
+          const expired = checkTrialExpired(deviceInfo.start_date);
+          const startDate = new Date(deviceInfo.start_date);
+          const now = new Date();
+          const diffTime = Math.abs(now - startDate);
+          const daysUsed = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          const daysRemaining = Math.max(0, 6 - daysUsed);
+
+          return {
+            status: "success",
+            registered: true,
+            start_date: deviceInfo.start_date,
+            days_remaining: daysRemaining,
+            valid: !expired,
+            expired: expired,
+          };
+        } else if (action === "register") {
+          const deviceInfo = getDeviceInfo(device_id);
+
+          if (deviceInfo) {
+            return {
+              status: "success",
+              registered: true,
+              message: "设备已注册",
+              start_date: deviceInfo.start_date,
+            };
+          }
+
+          const newDevice = registerDevice(device_id);
+          return {
+            status: "success",
+            message: "设备注册成功",
+            start_date: newDevice.start_date,
+            days_remaining: 6,
+          };
+        } else {
+          return {
+            status: "error",
+            message: "不支持的操作类型",
+          };
+        }
+      }
+
+      // 测试API
+      function testAPI() {
+        const deviceId = document.getElementById("deviceId").value;
+        const action = document.getElementById("action").value;
+
+        const result = handleAPIRequest({
+          action: action,
+          device_id: deviceId,
+        });
+
+        document.getElementById("testResult").textContent = JSON.stringify(
+          result,
+          null,
+          2
+        );
+      }
+
+      // 初始化页面
+      document.addEventListener("DOMContentLoaded", function () {
+        initDatabase();
+      });
+    </script>
+  </body>
+</html>
