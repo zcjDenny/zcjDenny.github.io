@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sigma播放器 - 许可证验证系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sql.js@1.8.0/dist/sql.js"></script>
+    <style>
+        :root {
+            --primary-color: #6e5494;
+            --secondary-color: #4078c0;
+            --accent-color: #ff6b6b;
+            --success-color: #4caf50;
+            --dark-bg: #0d1117;
+            --dark-card: #161b22;
+            --dark-text: #c9d1d9;
+            --light-bg: #f5f8fa;
+            --light-card: #ffffff;
+            --light-text: #24292e;
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--light-text);
+            line-height: 1.6;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        body.dark-mode {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        body.dark-mode header {
+            border-bottom: 1px solid #333;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: var(--light-text);
+            transition: var(--transition);
+        }
+
+        body.dark-mode .theme-toggle {
+            color: var(--dark-text);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--light-card);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+        }
+
+        body.dark-mode .card {
+            background-color: var(--dark-card);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        body.dark-mode .form-input {
+            background-color: var(--dark-card);
+            border-color: #333;
+            color: var(--dark-text);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        .status-card {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .status-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .valid {
+            color: var(--success-color);
+        }
+
+        .invalid {
+            color: var(--accent-color);
+        }
+
+        .status-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .status-desc {
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+        body.dark-mode .status-desc {
+            color: #8b949e;
+        }
+
+        .license-info {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+        }
+
+        body.dark-mode .license-info {
+            border-top: 1px solid #333;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .info-label {
+            font-weight: 500;
+            color: #666;
+        }
+
+        body.dark-mode .info-label {
+            color: #8b949e;
+        }
+
+        .info-value {
+            font-weight: 600;
+        }
+
+        .remaining-days {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            font-weight: 600;
+        }
+
+        body.dark-mode .remaining-days {
+            background-color: #1b5e20;
+            color: #e8f5e9;
+        }
+
+        .warning {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .response-container {
+            margin-top: 40px;
+        }
+
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .response-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .copy-btn {
+            padding: 8px 16px;
+            background-color: #f1f8ff;
+            color: var(--secondary-color);
+            border: 1px solid #d1e5fa;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        body.dark-mode .copy-btn {
+            background-color: #1c3b5a;
+            color: #79b8ff;
+            border-color: #2f4f6d;
+        }
+
+        .copy-btn:hover {
+            background-color: #dbedff;
+        }
+
+        body.dark-mode .copy-btn:hover {
+            background-color: #2c4d6e;
+        }
+
+        .response-box {
+            background-color: var(--light-card);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            overflow-x: auto;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            max-height: 300px;
+            border: 1px solid #ddd;
+        }
+
+        body.dark-mode .response-box {
+            background-color: var(--dark-card);
+            border-color: #333;
+        }
+
+        pre {
+            margin: 0;
+        }
+
+        .loading {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-left-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+        }
+
+        body.dark-mode .spinner {
+            border-color: rgba(255, 255, 255, 0.1);
+            border-left-color: var(--primary-color);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #666;
+            border-top: 1px solid #ddd;
+        }
+
+        body.dark-mode footer {
+            color: #8b949e;
+            border-top: 1px solid #333;
+        }
+
+        .instructions {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #f1f8ff;
+            border-radius: var(--border-radius);
+        }
+
+        body.dark-mode .instructions {
+            background-color: #1c3b5a;
+        }
+
+        .instructions h3 {
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+        }
+
+        .instructions ol {
+            margin-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 10px;
+        }
+
+        .db-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .db-status {
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        body.dark-mode .db-status {
+            background-color: #1e1e1e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-play-circle"></i>
+                <span>Sigma播放器许可证验证</span>
+            </div>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </header>
+
+        <div class="main-content">
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-key"></i> 许可证验证</h2>
+                <div class="form-group">
+                    <label for="machineCode">机器码</label>
+                    <input type="text" class="form-input" id="machineCode" placeholder="输入您的机器码" value="SMG-8XH2-B3C9-D7F6">
+                </div>
+                <div class="form-group">
+                    <label for="firstUseDate">首次使用日期</label>
+                    <input type="date" class="form-input" id="firstUseDate">
+                </div>
+                <button class="btn btn-block" id="validateBtn">
+                    <i class="fas fa-check-circle"></i> 验证许可证
+                </button>
+                
+                <div class="license-info">
+                    <h3>许可证状态</h3>
+                    <div class="info-item">
+                        <span class="info-label">状态:</span>
+                        <span class="info-value" id="licenseStatus">未验证</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">剩余天数:</span>
+                        <span class="info-value" id="remainingDays">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">到期日期:</span>
+                        <span class="info-value" id="expiryDate">-</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card status-card">
+                <div class="status-icon valid" id="statusIcon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2 class="status-title" id="statusTitle">许可证有效</h2>
+                <p class="status-desc" id="statusDesc">您的Sigma播放器许可证有效，可以正常使用。</p>
+                <div class="remaining-days" id="daysBadge">7 天</div>
+                
+                <div class="license-info">
+                    <div class="info-item">
+                        <span class="info-label">机器码:</span>
+                        <span class="info-value" id="displayMachineCode">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">首次验证:</span>
+                        <span class="info-value" id="displayFirstUse">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">最后验证:</span>
+                        <span class="info-value" id="displayLastCheck">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-database"></i> 数据库操作</h2>
+            <div class="db-controls">
+                <button class="btn" id="initDbBtn">
+                    <i class="fas fa-plus-circle"></i> 初始化数据库
+                </button>
+                <button class="btn" id="viewDbBtn">
+                    <i class="fas fa-eye"></i> 查看所有记录
+                </button>
+                <button class="btn" id="clearDbBtn">
+                    <i class="fas fa-trash"></i> 清空数据库
+                </button>
+            </div>
+            <div class="db-status" id="dbStatus">数据库状态: 未初始化</div>
+        </div>
+
+        <div class="response-container">
+            <div class="response-header">
+                <h3 class="response-title">API请求与响应</h3>
+                <button class="copy-btn" id="copyBtn">
+                    <i class="fas fa-copy"></i> 复制JSON
+                </button>
+            </div>
+            <div class="response-box">
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                </div>
+                <pre id="responseData">{
+  "message": "点击验证按钮开始验证许可证"
+}</pre>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3><i class="fas fa-info-circle"></i> 系统说明</h3>
+            <ol>
+                <li>首次使用软件时，系统会生成唯一的机器码并记录开始使用时间</li>
+                <li>每次启动软件都会向验证API发送请求，验证许可证状态</li>
+                <li>试用期为7天，到期后软件将无法使用</li>
+                <li>软件需要联网才能完成验证，离线状态下无法使用</li>
+                <li>同一机器码只能在单一设备上使用</li>
+            </ol>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2023 Sigma播放器 - 许可证验证系统 | 版本 1.0.0</p>
+    </footer>
+
+    <script>
+        // 主题切换功能
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+        });
+
+        // 设置默认日期为今天
+        document.getElementById('firstUseDate').valueAsDate = new Date();
+
+        // 获取元素
+        const machineCodeInput = document.getElementById('machineCode');
+        const firstUseDateInput = document.getElementById('firstUseDate');
+        const validateBtn = document.getElementById('validateBtn');
+        const responseData = document.getElementById('responseData');
+        const copyBtn = document.getElementById('copyBtn');
+        const loading = document.getElementById('loading');
+        const initDbBtn = document.getElementById('initDbBtn');
+        const viewDbBtn = document.getElementById('viewDbBtn');
+        const clearDbBtn = document.getElementById('clearDbBtn');
+        const dbStatus = document.getElementById('dbStatus');
+        
+        // 状态显示元素
+        const licenseStatus = document.getElementById('licenseStatus');
+        const remainingDays = document.getElementById('remainingDays');
+        const expiryDate = document.getElementById('expiryDate');
+        const statusIcon = document.getElementById('statusIcon');
+        const statusTitle = document.getElementById('statusTitle');
+        const statusDesc = document.getElementById('statusDesc');
+        const daysBadge = document.getElementById('daysBadge');
+        const displayMachineCode = document.getElementById('displayMachineCode');
+        const displayFirstUse = document.getElementById('displayFirstUse');
+        const displayLastCheck = document.getElementById('displayLastCheck');
+
+        // SQL.js数据库变量
+        let db = null;
+
+        // 初始化数据库
+        function initDatabase() {
+            try {
+                // 创建新的数据库
+                db = new SQL.Database();
+                
+                // 创建APIinfer表
+                const createTableSQL = `
+                    CREATE TABLE APIinfer (
+                        DeviceID TEXT PRIMARY KEY,
+                        StartDate TEXT,
+                        AuthInfo TEXT
+                    );
+                `;
+                
+                db.run(createTableSQL);
+                dbStatus.textContent = "数据库状态: 已初始化 (APIinfer表已创建)";
+                console.log("数据库初始化成功");
+                
+                // 显示一些示例数据
+                viewAllRecords();
+            } catch (error) {
+                console.error("数据库初始化失败:", error);
+                dbStatus.textContent = "数据库状态: 初始化失败 - " + error.message;
+            }
+        }
+
+        // 查看所有记录
+        function viewAllRecords() {
+            if (!db) {
+                dbStatus.textContent = "数据库状态: 请先初始化数据库";
+                return;
+            }
+            
+            try {
+                const result = db.exec("SELECT * FROM APIinfer");
+                if (result.length === 0) {
+                    responseData.textContent = "数据库中没有记录";
+                    return;
+                }
+                
+                const records = result[0].values.map(row => {
+                    return {
+                        DeviceID: row[0],
+                        StartDate: row[1],
+                        AuthInfo: row[2]
+                    };
+                });
+                
+                responseData.textContent = JSON.stringify(records, null, 2);
+            } catch (error) {
+                console.error("查询数据库失败:", error);
+                responseData.textContent = "查询失败: " + error.message;
+            }
+        }
+
+        // 检查设备是否存在
+        function checkDeviceExists(deviceId) {
+            if (!db) return false;
+            
+            try {
+                const result = db.exec(
+                    "SELECT * FROM APIinfer WHERE DeviceID = ?", 
+                    [deviceId]
+                );
+                
+                return result.length > 0 && result[0].values.length > 0;
+            } catch (error) {
+                console.error("检查设备失败:", error);
+                return false;
+            }
+        }
+
+        // 添加新设备
+        function addNewDevice(deviceId, startDate) {
+            if (!db) return false;
+            
+            try {
+                db.run(
+                    "INSERT INTO APIinfer (DeviceID, StartDate, AuthInfo) VALUES (?, ?, ?)",
+                    [deviceId, startDate, "trial"]
+                );
+                return true;
+            } catch (error) {
+                console.error("添加设备失败:", error);
+                return false;
+            }
+        }
+
+        // 获取设备信息
+        function getDeviceInfo(deviceId) {
+            if (!db) return null;
+            
+            try {
+                const result = db.exec(
+                    "SELECT * FROM APIinfer WHERE DeviceID = ?", 
+                    [deviceId]
+                );
+                
+                if (result.length === 0 || result[0].values.length === 0) {
+                    return null;
+                }
+                
+                const row = result[0].values[0];
+                return {
+                    DeviceID: row[0],
+                    StartDate: row[1],
+                    AuthInfo: row[2]
+                };
+            } catch (error) {
+                console.error("获取设备信息失败:", error);
+                return null;
+            }
+        }
+
+        // 更新设备验证信息
+        function updateDeviceAuth(deviceId, authInfo) {
+            if (!db) return false;
+            
+            try {
+                db.run(
+                    "UPDATE APIinfer SET AuthInfo = ? WHERE DeviceID = ?",
+                    [authInfo, deviceId]
+                );
+                return true;
+            } catch (error) {
+                console.error("更新设备信息失败:", error);
+                return false;
+            }
+        }
+
+        // 清空数据库
+        function clearDatabase() {
+            if (!db) {
+                dbStatus.textContent = "数据库状态: 请先初始化数据库";
+                return;
+            }
+            
+            try {
+                db.run("DELETE FROM APIinfer");
+                dbStatus.textContent = "数据库状态: 已清空所有记录";
+                responseData.textContent = "数据库已清空";
+            } catch (error) {
+                console.error("清空数据库失败:", error);
+                dbStatus.textContent = "数据库状态: 清空失败 - " + error.message;
+            }
+        }
+
+        // 模拟API验证函数
+        function validateLicense(machineCode, firstUseDate) {
+            // 这里模拟API请求
+            const now = new Date();
+            const firstUse = new Date(firstUseDate);
+            const diffTime = Math.abs(now - firstUse);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+            const remaining = 7 - diffDays;
+            
+            // 模拟随机失败（网络问题）
+            const isOnline = Math.random() > 0.2;
+            
+            if (!isOnline) {
+                return {
+                    success: false,
+                    error: "网络连接失败",
+                    message: "无法连接到验证服务器，请检查网络连接",
+                    data: null
+                };
+            }
+            
+            if (remaining <= 0) {
+                return {
+                    success: false,
+                    error: "试用期已结束",
+                    message: "7天试用期已结束，请购买正式版",
+                    data: {
+                        machine_code: machineCode,
+                        first_use: firstUseDate,
+                        days_used: 7,
+                        days_remaining: 0,
+                        expiry_date: new Date(firstUse.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                        valid: false
+                    }
+                };
+            }
+            
+            return {
+                success: true,
+                error: null,
+                message: "许可证验证成功",
+                data: {
+                    machine_code: machineCode,
+                    first_use: firstUseDate,
+                    days_used: diffDays,
+                    days_remaining: remaining,
+                    expiry_date: new Date(firstUse.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    valid: true,
+                    last_check: now.toISOString()
+                }
+            };
+        }
+
+        // 验证按钮点击事件
+        validateBtn.addEventListener('click', () => {
+            const machineCode = machineCodeInput.value.trim();
+            const firstUseDate = firstUseDateInput.value;
+            
+            if (!machineCode) {
+                responseData.textContent = JSON.stringify({
+                    error: "机器码不能为空"
+                }, null, 2);
+                return;
+            }
+            
+            if (!firstUseDate) {
+                responseData.textContent = JSON.stringify({
+                    error: "请选择首次使用日期"
+                }, null, 2);
+                return;
+            }
+            
+            // 显示加载动画
+            loading.style.display = 'flex';
+            responseData.textContent = '';
+            
+            // 模拟API请求延迟
+            setTimeout(() => {
+                // 检查数据库是否初始化
+                if (!db) {
+                    responseData.textContent = JSON.stringify({
+                        error: "数据库未初始化",
+                        message: "请先初始化数据库"
+                    }, null, 2);
+                    loading.style.display = 'none';
+                    return;
+                }
+                
+                // 检查设备是否存在
+                const deviceExists = checkDeviceExists(machineCode);
+                
+                if (!deviceExists) {
+                    // 设备不存在，添加新设备
+                    const added = addNewDevice(machineCode, firstUseDate);
+                    if (!added) {
+                        responseData.textContent = JSON.stringify({
+                            error: "添加设备失败",
+                            message: "无法将设备信息添加到数据库"
+                        }, null, 2);
+                        loading.style.display = 'none';
+                        return;
+                    }
+                }
+                
+                // 获取设备信息
+                const deviceInfo = getDeviceInfo(machineCode);
+                if (!deviceInfo) {
+                    responseData.textContent = JSON.stringify({
+                        error: "获取设备信息失败",
+                        message: "无法从数据库获取设备信息"
+                    }, null, 2);
+                    loading.style.display = 'none';
+                    return;
+                }
+                
+                // 使用数据库中的开始日期进行验证
+                const result = validateLicense(machineCode, deviceInfo.StartDate);
+                
+                // 显示API响应
+                responseData.textContent = JSON.stringify({
+                    ...result,
+                    databaseInfo: deviceInfo
+                }, null, 2);
+                
+                // 更新UI状态
+                if (result.success) {
+                    licenseStatus.textContent = "有效";
+                    licenseStatus.className = "info-value valid";
+                    remainingDays.textContent = result.data.days_remaining;
+                    expiryDate.textContent = result.data.expiry_date;
+                    
+                    statusIcon.className = "status-icon valid";
+                    statusIcon.innerHTML = '<i class="fas fa-check-circle"></i>';
+                    statusTitle.textContent = "许可证有效";
+                    statusDesc.textContent = "您的Sigma播放器许可证有效，可以正常使用。";
+                    daysBadge.textContent = result.data.days_remaining + " 天";
+                    daysBadge.style.display = "inline-block";
+                    
+                    displayMachineCode.textContent = result.data.machine_code;
+                    displayFirstUse.textContent = result.data.first_use;
+                    displayLastCheck.textContent = new Date().toLocaleString();
+                    
+                    // 更新数据库中的认证信息
+                    updateDeviceAuth(machineCode, "valid");
+                } else {
+                    licenseStatus.textContent = "无效";
+                    licenseStatus.className = "info-value invalid";
+                    remainingDays.textContent = "0";
+                    expiryDate.textContent = result.data ? result.data.expiry_date : "-";
+                    
+                    statusIcon.className = "status-icon invalid";
+                    statusIcon.innerHTML = '<i class="fas fa-times-circle"></i>';
+                    statusTitle.textContent = "许可证无效";
+                    statusDesc.textContent = result.message;
+                    daysBadge.style.display = "none";
+                    
+                    if (result.data) {
+                        displayMachineCode.textContent = result.data.machine_code;
+                        displayFirstUse.textContent = result.data.first_use;
+                        displayLastCheck.textContent = new Date().toLocaleString();
+                    }
+                    
+                    // 更新数据库中的认证信息
+                    updateDeviceAuth(machineCode, "expired");
+                }
+                
+                loading.style.display = 'none';
+            }, 1500);
+        });
+
+        // 复制JSON功能
+        copyBtn.addEventListener('click', () => {
+            const textArea = document.createElement('textarea');
+            textArea.value = responseData.textContent;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            
+            // 显示复制成功反馈
+            const originalText = copyBtn.innerHTML;
+            copyBtn.innerHTML = '<i class="fas fa-check"></i> 已复制!';
+            setTimeout(() => {
+                copyBtn.innerHTML = originalText;
+            }, 2000);
+        });
+
+        // 数据库操作按钮事件
+        initDbBtn.addEventListener('click', initDatabase);
+        viewDbBtn.addEventListener('click', viewAllRecords);
+        clearDbBtn.addEventListener('click', clearDatabase);
+
+        // 初始加载示例数据
+        window.addEventListener('load', () => {
+            // 设置默认机器码
+            machineCodeInput.value = "SMG-" + Math.random().toString(36).substr(2, 9).toUpperCase();
+            
+            // 设置默认日期为3天前
+            const threeDaysAgo = new Date();
+            threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+            firstUseDateInput.valueAsDate = threeDaysAgo;
+            
+            // 自动初始化数据库
+            initDatabase();
+        });
+    </script>
+</body>
+</html>
