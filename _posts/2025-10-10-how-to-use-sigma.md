@@ -18,7 +18,8 @@ catalog:      true
 * 文字转语音工具
 ## 下载地址
 [百度网盘下载地址](https://pan.baidu.com/s/1crGprjnsWc_HqU_Hw6e4cA?pwd=s8kq)
-
+[夸克网盘下载地址](https://pan.quark.cn/s/fb3f00ddfbc5)
+[迅雷云盘下载地址](https://pan.xunlei.com/s/VObDbqNTyrlZgRcL_7fcOMV7A1?pwd=h3js#)
 ## 软件界面
 
 ![](https://deepcast.top/img/faceshow.png)
@@ -32,5 +33,6 @@ QQ：125781909
  Email：ccccvt@163.com
 
 有问必答
+
 
 
