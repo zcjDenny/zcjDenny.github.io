@@ -21,9 +21,9 @@ catalog:      true
 
 ## 软件界面
 
-![](.\img\1.jpg)
+![](https://deepcast.top/img/faceshow.png)
 
-![](C:\Users\Administrator\Desktop\src\2.jpg)
+![](https://deepcast.top/img/menushow.png)
 
 ## 联系作者
 
@@ -32,4 +32,5 @@ QQ：125781909
  Email：ccccvt@163.com
 
 有问必答
+
 
