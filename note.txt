@@ -1,3 +1,1 @@
-V1.5升级了在线验证方式，添加了系统通知等……
-V1.6升级了B站下载器解决了上一版本部分用户下载出错问题使用更稳定可靠的方法获取视频下载链接，最新版下载地址：百度网盘下载地址:
-https://pan.baidu.com/s/1crGprjnsWc_HqU_Hw6e4cA?pwd=s8kq
+因为第三方服务器出问题导致在线验证出问题，其它版本可能出现无法登录问题，强烈推荐升级至V1.7稳定版，百度网盘下载地址:https://pan.baidu.com/s/1crGprjnsWc_HqU_Hw6e4cA?pwd=s8kq
